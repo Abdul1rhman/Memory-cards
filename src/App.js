@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import './App.css'
 import SingleCard from './components/SingleCard';
+import Confetti from 'react-confetti'
 const cardImage =[
   {"src":"/img/helmet-1.png", matched:false},
   {"src":"/img/potion-1.png", matched:false},
@@ -16,7 +17,7 @@ function App() {
   const [choiceOne, setChoiceOne]=useState(null);
   const [choiceTwo, setChoiceTwo]=useState(null);
   const [disabled, setDisabled] = useState(false);
-  
+  const [finshed, setFinshed] = useState(0)
   //shuffle cards
   const shuffleCards = () =>{
     const shuffledCards = [...cardImage,...cardImage]
@@ -43,6 +44,7 @@ function App() {
         setCards(prevCards => {
           return prevCards.map(card =>{
             if(card.src === choiceOne.src){
+              finshedd()
               return {...card, matched:true}
             }
             else{
@@ -69,6 +71,9 @@ function App() {
 
     setTurns(prevTurns => prevTurns + 1 )
   }
+  const finshedd = () =>{
+    setFinshed(prevfinshed => prevfinshed + 1);
+  }
 
   useEffect(()=>{
     shuffleCards()
@@ -77,16 +82,18 @@ function App() {
   
 
   
+  const allMatched = cards.every(item => item.matched);
   
-  
-
   return (
+    
     <div className="App">
+    {allMatched&& <Confetti/>}
       {/* <h1>Magic Match</h1> */}
       <button onClick={shuffleCards}>New Game</button>
       
       
       <h2>Turns: {turns}</h2>
+      <h2>{allMatched? turns===6?'excellent':turns>6&&turns<10 ?'average':'you should try harder':'' }</h2>
       
       <div className='card-grid'>
         
